@@ -70,9 +70,42 @@ export const signup = async (req, res) => {
     res.status(500).json({ msg: error.message });
   }
 };
-export const login = (req, res) => {
-  res.send('login route called');
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (user && (await user.matchPassword(password))) {
+      const { accessToken, refreshToken } = generateToken(user._id);
+
+      await storeRefreshToken(user._id, refreshToken);
+
+      setCookies(res, accessToken, refreshToken);
+      res.json({
+        message: 'Login Successful',
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
+      });
+    } else {
+      res.status(401).json({ message: 'Invalid email or password' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
-export const logout = (req, res) => {
-  res.send('logout route called');
+export const logout = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    await redis.del(`refreshToken:${decoded.userId}`);
+
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    res.json({ message: 'Logout successful' });
+  } catch (error) {
+    res.status(500).json({ error: error.message, message: 'Server Error' });
+  }
 };
