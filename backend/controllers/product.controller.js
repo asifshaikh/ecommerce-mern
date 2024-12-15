@@ -111,4 +111,27 @@ export const getProductsByCategory = async (req, res) => {
     res.status(500).json({ error: error.message, message: 'Server Error' });
   }
 };
-export const toggleFeaturedProduct = async (req, res) => {};
+export const toggleFeaturedProduct = async (req, res) => {
+  try {
+    const products = await Product.findById(req.params.id);
+    if (products) {
+      products.featured = !products.featured;
+      const updatedProduct = await products.save();
+      await updateFeaturedProductCache();
+      res.json(updatedProduct);
+    } else {
+      res.status(404).json({ message: 'Product not found' });
+    }
+  } catch (error) {
+    console.log('Error in toggleFeaturedProduct: ', error.message);
+    res.status(500).json({ error: error.message, message: 'Server Error' });
+  }
+};
+async function updateFeaturedProductCache() {
+  try {
+    const featuredProduct = await Product.findOne({ featured: true });
+    await redis.set('featured_product', JSON.stringify(featuredProduct));
+  } catch (error) {
+    console.log('error in update cache function');
+  }
+}
