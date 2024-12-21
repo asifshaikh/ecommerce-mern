@@ -14,12 +14,14 @@ function App() {
         </div>
       </div>
 
-      <NavBar />
-      <Routes>
-        <Route path='/' element={<HomePage />} />
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/signup' element={<SignUpPage />} />
-      </Routes>
+      <div className='relative z-50 pt-20'>
+        <NavBar />
+        <Routes>
+          <Route path='/' element={<HomePage />} />
+          <Route path='/signup' element={<SignUpPage />} />
+          <Route path='/login' element={<LoginPage />} />
+        </Routes>
+      </div>
     </div>
   );
 }
