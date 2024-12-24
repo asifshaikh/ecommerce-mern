@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
+import AdminPage from './pages/AdminPage';
 import { Toaster } from 'react-hot-toast';
 import { useUserStore } from './stores/useUserStore';
 import { useEffect } from 'react';
@@ -34,6 +35,12 @@ function App() {
           <Route
             path='/login'
             element={!user ? <LoginPage /> : <Navigate to='/' />}
+          />
+          <Route
+            path='/secret-dashboard'
+            element={
+              user?.role === 'admin' ? <AdminPage /> : <Navigate to='/' />
+            }
           />
         </Routes>
       </div>
