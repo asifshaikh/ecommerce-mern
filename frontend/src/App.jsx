@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import AdminPage from './pages/AdminPage';
 import CartPage from './pages/CartPage';
+import PurchaseSuccess from './pages/PurchaseSuccess';
 import { Toaster } from 'react-hot-toast';
 import { useUserStore } from './stores/useUserStore';
 import { useEffect } from 'react';
@@ -56,6 +57,10 @@ function App() {
           <Route
             path='/cart'
             element={user ? <CartPage /> : <Navigate to='/login' />}
+          />
+          <Route
+            path='/purchase-success'
+            element={user ? <PurchaseSuccess /> : <Navigate to='/login' />}
           />
         </Routes>
       </div>
