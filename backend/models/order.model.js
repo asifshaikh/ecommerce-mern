@@ -1,18 +1,18 @@
 import mongoose from 'mongoose';
 
-const orderSchema = mongoose.Schema(
+const orderSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
       ref: 'User',
+      required: true,
     },
     products: [
       {
         product: {
           type: mongoose.Schema.Types.ObjectId,
-          required: true,
           ref: 'Product',
+          required: true,
         },
         quantity: {
           type: Number,
@@ -33,7 +33,6 @@ const orderSchema = mongoose.Schema(
     },
     stripeSessionId: {
       type: String,
-      required: true,
       unique: true,
     },
   },
