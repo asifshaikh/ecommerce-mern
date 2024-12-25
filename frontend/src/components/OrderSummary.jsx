@@ -21,16 +21,15 @@ const OrderSummary = () => {
     const stripe = await stripePromise;
     const res = await axios.post('/payments/create-checkout-session', {
       products: cart,
-      couponCode: coupon ? coupon.code : null,
+      coupon: coupon ? coupon.code : null,
     });
 
     const session = res.data;
     const result = await stripe.redirectToCheckout({
       sessionId: session.id,
     });
-
     if (result.error) {
-      console.error('Error:', result.error);
+      console.error('Error redirecting to checkout:', result.error.message);
     }
   };
 
